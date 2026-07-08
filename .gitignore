@@ -1,0 +1,14 @@
+# Regeneratable simulation output — reproduce with `python data_generation.py` (fixed seed)
+data/processed/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
