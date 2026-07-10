@@ -10,8 +10,11 @@
 
 # %%
 import sys
+from pathlib import Path
 
-sys.path.insert(0, "..")
+HERE = Path(__file__).resolve().parent   # notebooks/
+ROOT = HERE.parent                        # VoucherABTest/
+sys.path.insert(0, str(ROOT))
 
 import pandas as pd
 
@@ -27,11 +30,18 @@ from validation import (
 # ## Generate the individual-level experiment log
 
 # %%
-dgp = VoucherDGP(calibration_path="../data/raw_benchmarks/case_summary_tables.csv")
+calibration_path = ROOT / "data" / "raw_benchmarks" / "case_summary_tables.csv"
+processed_dir = ROOT / "data" / "processed"
+processed_dir.mkdir(parents=True, exist_ok=True)
+
+dgp = VoucherDGP(calibration_path=calibration_path)
 experiment_log = dgp.simulate_users()
-experiment_log.to_csv("../data/processed/experiment_log.csv", index=False)
+
+output_path = processed_dir / "experiment_log.csv"
+experiment_log.to_csv(output_path, index=False)
+
 print(f"Simulated {len(experiment_log):,} users")
-experiment_log.head()
+print(experiment_log.head())
 
 # %% [markdown]
 # ## Check 1 — Aggregation recovery vs. the 7 originally-tested conditions

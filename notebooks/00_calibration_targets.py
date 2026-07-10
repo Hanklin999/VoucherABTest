@@ -8,8 +8,11 @@
 
 # %%
 import sys
+from pathlib import Path
 
-sys.path.insert(0, "..")
+HERE = Path(__file__).resolve().parent   # notebooks/
+ROOT = HERE.parent                        # VoucherABTest/
+sys.path.insert(0, str(ROOT))
 
 from build_calibration_targets import build_calibration_table
 
@@ -18,8 +21,11 @@ from build_calibration_targets import build_calibration_table
 
 # %%
 calibration = build_calibration_table()
-calibration.to_csv("../data/raw_benchmarks/case_summary_tables.csv", index=False)
-print(f"{len(calibration)} rows written to data/raw_benchmarks/case_summary_tables.csv")
+
+output_path = ROOT / "data" / "raw_benchmarks" / "case_summary_tables.csv"
+calibration.to_csv(output_path, index=False)
+
+print(f"{len(calibration)} rows written to {output_path}")
 calibration.head(10)
 
 # %% [markdown]

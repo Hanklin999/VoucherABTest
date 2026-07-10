@@ -8,8 +8,11 @@
 
 # %%
 import sys
+from pathlib import Path
 
-sys.path.insert(0, "..")
+HERE = Path(__file__).resolve().parent   # notebooks/
+ROOT = HERE.parent                        # VoucherABTest/
+sys.path.insert(0, str(ROOT))
 
 import pandas as pd
 
@@ -21,15 +24,25 @@ from experiment_analysis import (
     TIERS_ASC,
 )
 
-experiment_log = pd.read_csv("../data/processed/experiment_log.csv")
+# 讀取模擬實驗 log
+experiment_log_path = ROOT / "data" / "processed" / "experiment_log.csv"
+experiment_log = pd.read_csv(experiment_log_path)
 
 # %% [markdown]
 # ## Named comparisons (mirrors the source case study's 4 Key Insights), FDR-corrected
 
 # %%
 comparisons = run_named_comparisons(experiment_log)
-comparisons.to_csv("../outputs/named_comparisons.csv", index=False)
-comparisons[["comparison", "tier", "metric", "pct_lift", "p_value", "q_value", "significant"]]
+
+# 確保 outputs 資料夾存在
+outputs_dir = ROOT / "outputs"
+outputs_dir.mkdir(parents=True, exist_ok=True)
+
+comparisons_path = outputs_dir / "named_comparisons.csv"
+comparisons.to_csv(comparisons_path, index=False)
+
+cols = ["comparison", "tier", "metric", "pct_lift", "p_value", "q_value", "significant"]
+print(comparisons[cols].head())
 
 # %% [markdown]
 # **Headline finding: 0 of 48 comparisons are significant after FDR

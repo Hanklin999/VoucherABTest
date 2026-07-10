@@ -8,8 +8,11 @@
 
 # %%
 import sys
+from pathlib import Path
 
-sys.path.insert(0, "..")
+HERE = Path(__file__).resolve().parent   # notebooks/
+ROOT = HERE.parent                        # VoucherABTest/
+sys.path.insert(0, str(ROOT))
 
 import pandas as pd
 from sklearn.model_selection import train_test_split

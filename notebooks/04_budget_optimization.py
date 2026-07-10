@@ -10,8 +10,12 @@
 
 # %%
 import sys
+from pathlib import Path
 
-sys.path.insert(0, "..")
+HERE = Path(__file__).resolve().parent        # .../VoucherABTest/notebooks
+ROOT = HERE.parent                             # .../VoucherABTest
+
+sys.path.insert(0, str(ROOT))
 
 import pandas as pd
 
@@ -28,9 +32,22 @@ from budget_allocator import (
 from visualization import plot_tier_lever_heatmap, plot_budget_efficiency_frontier
 from experiment_analysis import run_named_comparisons
 
-calibration = pd.read_csv("../data/raw_benchmarks/case_summary_tables.csv")
-experiment_log = pd.read_csv("../data/processed/experiment_log.csv")
-dgp = VoucherDGP(calibration_path="../data/raw_benchmarks/case_summary_tables.csv")
+# 路徑集中管理
+DATA_DIR = ROOT / "data"
+RAW_BENCHMARKS_PATH = DATA_DIR / "raw_benchmarks" / "case_summary_tables.csv"
+PROCESSED_DIR = DATA_DIR / "processed"
+EXPERIMENT_LOG_PATH = PROCESSED_DIR / "experiment_log.csv"
+
+OUTPUTS_DIR = ROOT / "outputs"
+FIGURES_DIR = OUTPUTS_DIR / "figures"
+
+# 確保輸出資料夾存在
+OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
+FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+
+calibration = pd.read_csv(RAW_BENCHMARKS_PATH)
+experiment_log = pd.read_csv(EXPERIMENT_LOG_PATH)
+dgp = VoucherDGP(calibration_path=RAW_BENCHMARKS_PATH)
 
 print(f"Budget: NT${BUDGET_TWD:,.0f} = ${BUDGET_USD:,.2f} USD")
 print(f"Addressable population: {TOTAL_ADDRESSABLE_USERS:,} users")
@@ -40,16 +57,18 @@ print(f"Addressable population: {TOTAL_ADDRESSABLE_USERS:,} users")
 
 # %%
 econ_table = build_tier_condition_table(dgp, calibration)
-econ_table[
-    ["tier", "condition", "profit_per_user", "cost_per_user", "incremental_profit_per_user", "roi_ratio"]
+econ_view = econ_table[
+    ["tier", "condition", "profit_per_user", "cost_per_user",
+     "incremental_profit_per_user", "roi_ratio"]
 ].sort_values(["tier", "roi_ratio"], ascending=[True, False])
+print(econ_view.head())
 
 # %% [markdown]
 # ## Our allocation: greedy fractional knapsack
 
 # %%
 alloc_df, summary = greedy_fractional_allocation(econ_table)
-alloc_df
+print(alloc_df.head())
 
 # %%
 print(f"Total cost: ${summary['total_cost']:,.2f} ({summary['budget_utilization_pct']:.1f}% of budget)")
@@ -84,17 +103,19 @@ benchmark_table = pd.DataFrame(
         {"strategy": "This project's ROI-ranked allocation", **summary},
     ]
 )
-benchmark_table
+print(benchmark_table.head())
 
 # %% [markdown]
 # ## Sensitivity analysis: does the recommendation hold under different assumptions?
 
 # %%
-sensitivity = sensitivity_analysis(calibration, calibration_path="../data/raw_benchmarks/case_summary_tables.csv")
-sensitivity.to_csv("../outputs/sensitivity_analysis.csv", index=False)
-sensitivity
+sensitivity = sensitivity_analysis(calibration, calibration_path=RAW_BENCHMARKS_PATH)
 
-# %%
+sensitivity_path = OUTPUTS_DIR / "sensitivity_analysis.csv"
+sensitivity.to_csv(sensitivity_path, index=False)
+
+print(sensitivity.head())
+
 n_unique = sensitivity["top_allocated_segment"].nunique()
 print(
     f"Top-allocated segment is identical across all {len(sensitivity)} assumption "
@@ -108,8 +129,16 @@ print(
 
 # %%
 comparisons = run_named_comparisons(experiment_log)
-plot_tier_lever_heatmap(comparisons, "../outputs/figures/tier_lever_heatmap.png")
+
+tier_lever_fig_path = FIGURES_DIR / "tier_lever_heatmap.png"
+plot_tier_lever_heatmap(comparisons, tier_lever_fig_path)
+
+budget_frontier_fig_path = FIGURES_DIR / "budget_efficiency_frontier.png"
 plot_budget_efficiency_frontier(
-    dgp, calibration, "../outputs/figures/budget_efficiency_frontier.png", max_budget=BUDGET_USD * 5
+    dgp,
+    calibration,
+    budget_frontier_fig_path,
+    max_budget=BUDGET_USD * 5,
 )
-print("Figures saved to outputs/figures/")
+
+print("Figures saved to", FIGURES_DIR)
