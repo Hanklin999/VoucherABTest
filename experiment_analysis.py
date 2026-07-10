@@ -5,7 +5,7 @@ Two complementary approaches, both standard Product Data Scientist tooling
 (deliberately NOT causal-inference-heavy — this experiment is a clean
 randomized factorial design, so no DiD/PSM is needed):
 
-1. NAMED PAIRWISE COMPARISONS (mirrors the PDF's 4 "Key Insights" exactly):
+1. NAMED PAIRWISE COMPARISONS (mirrors the source case study's 4 "Key Insights" exactly):
    two-proportion z-test for order rate, Welch's t-test for profit per user,
    run separately within each usage tier, then FDR-corrected across all
    tests in the same metric family (24 tests each for order/profit) so we
@@ -30,7 +30,7 @@ from statsmodels.stats.proportion import proportions_ztest
 
 TIERS_ASC = ["0-29", "30-69", "70-79", "80-89", "90-99", "100"]
 
-# Named comparisons mirroring the PDF's 4 Key Insights.
+# Named comparisons mirroring the source case study's 4 Key Insights.
 # Each tuple: (comparison_name, condition_a, condition_b, description)
 NAMED_COMPARISONS: list[tuple[str, str, str, str]] = [
     ("voucher_vs_none", "s0_m249_c3", "no_voucher", "Any voucher vs. no voucher issued"),
@@ -208,7 +208,7 @@ def main() -> None:
     df = pd.read_csv("data/processed/experiment_log.csv")
 
     print("=" * 70)
-    print("NAMED COMPARISONS (mirrors PDF's 4 Key Insights), FDR-corrected")
+    print("NAMED COMPARISONS (mirrors source case study's 4 Key Insights), FDR-corrected")
     print("=" * 70)
     comparisons = run_named_comparisons(df)
     print(

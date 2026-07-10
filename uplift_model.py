@@ -46,7 +46,7 @@ def prepare_features(df: pd.DataFrame) -> tuple[pd.DataFrame, np.ndarray]:
     Returns:
         Tuple of (feature DataFrame with one-hot tier + usage_rate, treatment array).
         Treatment is 1 if ANY voucher was issued, 0 for `no_voucher` — matching
-        the PDF's Key Insight #1 framing ("voucher issued" vs "no voucher").
+        the source case study's Key Insight #1 framing ("voucher issued" vs "no voucher").
     """
     features = pd.get_dummies(df["tier"], prefix="tier", drop_first=False)
     features["usage_rate"] = df["usage_rate"].to_numpy()

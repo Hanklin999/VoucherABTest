@@ -8,7 +8,9 @@
 
 ## TL;DR
 
-Across 6 buyer segments and 6 voucher configurations (shipping copay × min-spend × voucher count), the highest **profit-per-budget-dollar** segment isn't the one with the biggest per-user lift — it's `70-79%` historical-usage buyers on a cheap, low-frequency voucher (`$19 copay, 1 voucher`). Under the case's original NT$1,000,000 subsidy cap, a budget-ranked allocation across *all* segments outperforms any single-segment strategy by 6–20x on blended ROI. But the underlying experiment, as sized, is **underpowered** to detect several of the effects it's built to find — that finding is as important as the allocation itself.
+Across 6 buyer segments and 6 voucher configurations (shipping copay × min-spend × voucher count), the highest **profit-per-budget-dollar** segment isn't the one with the biggest per-user lift — it's `70-79%` historical-usage buyers on a cheap, low-frequency voucher (`$19 copay, 1 voucher`). Under the case's original NT$1,000,000 subsidy cap, a budget-ranked allocation across *all* segments outperforms any single-segment strategy on blended ROI. But the underlying experiment, as sized, is **underpowered** to detect several of the effects it's built to find — that finding is as important as the allocation itself.
+
+![Tier x lever heatmap](outputs/figures/tier_lever_heatmap.png)
 
 ---
 
@@ -117,20 +119,20 @@ Re-evaluated at the same NT$1,000,000 budget, Scenario 1 (order-volume-max) bare
 
 ## Decision Memo
 
-**Recommendation**: allocate the full NT$1,000,000 (~$31,746 USD) budget to `70-79%`-tier buyers on the `$19-copay / ×1-voucher` configuration, reaching ~28,400 users at ~100% budget utilization.
+**Recommendation**: allocate the full NT$1,000,000 (~$31,746 USD) budget to `70-79%`-tier buyers on the `$19-copay / ×1-voucher` configuration, reaching ~12,000 users at ~100% budget utilization.
 
 | Strategy | Incremental profit | Cost | Blended ROI | Users reached |
 |---|---|---|---|---|
-| PDF Scenario 1 (order-volume max, 90-99% tier) | $6 | $31,741 | 0.0% | 3,121 |
-| PDF Scenario 2 (profit-per-user max, 30-69% tier) | **-$44** | $31,741 | -0.1% | 5,077 |
-| PDF Scenario 3 (60/40 blended) | -$14 | $31,736 | -0.0% | 3,903 |
-| **This project's ROI-ranked allocation** | **$268** | $31,746 | **0.8%** | 28,420 |
+| Original Strategy 1 (order-volume max, 90-99% tier) | $4 | $31,746 | 0.0% | 2,081 |
+| Original Strategy 2 (profit-per-user max, 30-69% tier) | **-$26** | $31,745 | -0.1% | 2,962 |
+| Original Strategy 3 (60/40 blended) | -$8 | $31,728 | -0.0% | 2,432 |
+| **This project's ROI-ranked allocation** | **$113** | $31,746 | **0.4%** | 12,025 |
 
 Caveats that matter more than the headline number:
-- `shipping_base_cost` ($30), `TOTAL_ADDRESSABLE_USERS` (500,000), and the TWD/USD rate (31.5) are **stated business assumptions**, not calibrated. A 27-combination sensitivity sweep (see `outputs/sensitivity_analysis.csv`) shows the **recommended segment is robust to all three** — `70-79%`/`$19-copay ×1` wins in every combination tested, though the resulting ROI itself ranges from 0.4% to ~7% depending on the assumptions. Robust choice, uncertain magnitude.
+- `shipping_base_cost` (45), `TOTAL_ADDRESSABLE_USERS` (9M accounts), and per-order unit economics (450 AOV × 5% commission − 15 variable shipping cost) are **provided operational figures** from the original logistics context; only the TWD/USD rate (31.5) remains an assumption, needed because the source tables label profit in USD while the budget is NTD. A 27-combination sensitivity sweep (see `outputs/sensitivity_analysis.csv`) shows the **recommended segment is robust across all combinations tested** — `70-79%`/`$19-copay ×1` wins in every one, though ROI ranges 0.26–0.58% depending on the cost basis. Robust choice, modest and uncertain magnitude.
+- The unit economics also enable an independent cross-check: calibrated baseline profit-per-order declines monotonically from 1.08× the 52.5-NTD no-voucher ceiling (0-29% tier) to 0.35× (90-99% tier), exactly the ordering the P&L structure predicts — see `DGP_ASSUMPTIONS.md`.
 - The recommended segment (`70-79%`) is also one of the smaller, noisier tiers from the power analysis (Finding #1) — before committing real budget, this allocation should be validated with a properly-powered live test, not launched off this point estimate alone.
 
-![Tier x lever heatmap](outputs/figures/tier_lever_heatmap.png)
 ![Budget efficiency frontier](outputs/figures/budget_efficiency_frontier.png)
 
 ---
@@ -166,6 +168,7 @@ VoucherROI-ProductScience/
 ├── visualization.py
 ├── DGP_ASSUMPTIONS.md
 ├── LICENSE
+├── requirements.txt
 └── README.md
 ```
 
@@ -174,7 +177,7 @@ Notebooks are jupytext percent-format underneath (`.py` source files alongside e
 ## Setup
 
 ```bash
-pip install numpy pandas scipy scikit-learn statsmodels
+pip install -r requirements.txt
 
 python build_calibration_targets.py   # transcribe source tables
 python data_generation.py             # generate calibrated individual-level data
@@ -188,7 +191,7 @@ python budget_allocator.py            # budget-constrained allocation
 
 ## Limitations
 
-- **Source data is aggregate-only.** Every individual-level number in this project is a reconstruction calibrated to match reported segment aggregates — real individual-level data doesn't exist here, and the original PDF itself is explicitly disclaimed as an anonymized/synthesized illustrative case.
+- **Source data is aggregate-only.** Every individual-level number in this project is a reconstruction calibrated to match reported segment aggregates — real individual-level data doesn't exist here, and the original case study itself is explicitly disclaimed as an anonymized/synthesized illustrative case.
 - **Additive lever model.** Copay, min-spend, and voucher-count effects are combined additively; the one clear sign of a real interaction (copay×count in the `90-99%` tier) isn't modeled, by necessity of data sparsity.
 - **Underpowered as sized.** See Finding #1 — this is a simulation of what the experiment *would* look like at a specific (assumed) sample size, not a claim that the effects aren't real at the scale the original case actually ran at.
 - **Budget-allocation assumptions are unvalidated.** Population size, shipping cost basis, and FX rate are stated business assumptions; the ranking is sensitive to all three.

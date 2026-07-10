@@ -1,9 +1,9 @@
 # DGP Assumptions — Voucher ROI Product Science Portfolio
 
 Every number in the simulation traces back to one of three sources:
-(A) directly transcribed from the PDF case study, (B) derived arithmetically
+(A) directly transcribed from the source case study (PDF), (B) derived arithmetically
 from transcribed numbers, or (C) a modeling assumption imposed to fill a gap
-the PDF doesn't cover. This document lists which is which.
+the source tables don't cover. This document lists which is which.
 
 ## (A) Directly transcribed (data/raw_benchmarks/case_summary_tables.csv)
 
@@ -24,7 +24,7 @@ the PDF doesn't cover. This document lists which is which.
 ## (B) Derived arithmetically (src/data_generation.py, `VoucherDGP.__init__`)
 
 - `profit_per_order` (conditional on ordering) = `profit_per_user / order_per_user`,
-  computed per tier per condition. The PDF only reports per-user (unconditional)
+  computed per tier per condition. The source tables only report per-user (unconditional)
   averages; dividing by order rate recovers the conditional value needed to
   simulate individual transactions.
 - **Copay slope** (effect per $1 of buyer copay): averaged from two
@@ -81,7 +81,7 @@ the PDF doesn't cover. This document lists which is which.
 5. **Individual-level noise**: order outcome is Bernoulli(predicted
    probability); profit given an order is `profit_per_order x Lognormal(0,
    0.35)`. The lognormal spread (σ=0.35) is a reasonable-business-assumption
-   placeholder, not derived from the PDF (which has no individual-level
+   placeholder, not derived from the source tables (which has no individual-level
    variance information) — chosen to be wide enough that repeated small-N
    simulations show realistic sampling jitter (validation.py check #2).
 
@@ -97,3 +97,27 @@ tier-by-condition model (no additivity assumption) would fit these 7 points
 exactly, at the cost of being unable to predict any untested combination —
 a classic bias-variance tradeoff, and one worth stating explicitly in the
 final README rather than quietly picking whichever number looks better.
+
+## Budget-optimization parameters (updated with operational figures)
+
+Originally three placeholder assumptions; two have since been replaced with
+figures provided from the project owner's direct operational knowledge of
+the original logistics context:
+
+| Parameter | Value | Status |
+|---|---|---|
+| `SHIPPING_BASE_COST` | 45 | **Provided** (was a $30 placeholder) |
+| `TOTAL_ADDRESSABLE_USERS` | 9,000,000 accounts | **Provided** (was a 500k placeholder) |
+| `AOV` / `COMMISSION_RATE` / `SHIPPING_VARIABLE_COST` | 450 / 5% / 15 | **Provided** unit economics: profit/order (no voucher) = 45 + 450x5% - 15 = 52.5 |
+| `TWD_PER_USD` | 31.5 | **Still assumed** — needed only because the source tables label profit in USD while the budget and unit economics are NTD |
+
+The provided unit economics enabled a cross-check the placeholders couldn't:
+calibrated baseline profit-per-order should approach the 52.5-NTD (~$1.67)
+no-voucher ceiling for LOW-usage tiers (whose orders mostly pay full
+shipping) and fall below it as usage rises. The calibration passes this
+check almost perfectly — 0-29 tier sits at 1.08x the ceiling, declining
+monotonically to 0.35x at the 90-99 tier, with only the anomalous "100"
+tier breaking the ordering (consistent with the one-time-buyer
+interpretation documented above). This independent agreement between the
+transcribed source-table numbers and the real unit economics substantially raises
+confidence in both.

@@ -4,7 +4,7 @@ rigor for the Voucher ROI project.
 
 Three checks:
 1. Aggregation recovery — simulate at large N, aggregate back to
-   tier x condition, and compare against the transcribed PDF numbers for
+   tier x condition, and compare against the transcribed source-table numbers for
    the 7 conditions that were ACTUALLY in the original case study. Flags
    any cell outside a tolerance band.
 2. Sampling-noise sanity check — repeat the simulation at a REALISTIC
@@ -26,7 +26,7 @@ TOLERANCE_PCT = 15.0  # cells within +/-15% of target are "recovered"
 
 
 def aggregation_recovery_check(dgp: VoucherDGP, n_users: int = 500_000) -> pd.DataFrame:
-    """Compare large-N simulated aggregates against the transcribed PDF targets.
+    """Compare large-N simulated aggregates against the transcribed source-table targets.
 
     Args:
         dgp: A fitted VoucherDGP instance.

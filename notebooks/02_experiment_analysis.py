@@ -1,7 +1,7 @@
 # %% [markdown]
 # # 02 — Experiment Analysis
 #
-# FDR-corrected significance tests mirroring the PDF's 4 Key Insights, an
+# FDR-corrected significance tests mirroring the source case study's 4 Key Insights, an
 # interaction-regression cross-check, and a power analysis explaining why
 # nothing survives correction at the current sample size. See
 # `experiment_analysis.py` for full docstrings.
@@ -24,7 +24,7 @@ from experiment_analysis import (
 experiment_log = pd.read_csv("../data/processed/experiment_log.csv")
 
 # %% [markdown]
-# ## Named comparisons (mirrors the PDF's 4 Key Insights), FDR-corrected
+# ## Named comparisons (mirrors the source case study's 4 Key Insights), FDR-corrected
 
 # %%
 comparisons = run_named_comparisons(experiment_log)
@@ -33,7 +33,7 @@ comparisons[["comparison", "tier", "metric", "pct_lift", "p_value", "q_value", "
 
 # %% [markdown]
 # **Headline finding: 0 of 48 comparisons are significant after FDR
-# correction**, despite most trending in the direction the PDF reports.
+# correction**, despite most trending in the direction the source case study reports.
 # This is the most important result in this notebook, not a footnote —
 # see the power analysis below for why.
 

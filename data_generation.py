@@ -1,12 +1,12 @@
 """
 Individual-level data generating process for the Voucher ROI Product
 Science portfolio, calibrated against data/raw_benchmarks/case_summary_tables.csv
-(the tidy transcription of the original PDF case study).
+(the tidy transcription of the original case-study deck (PDF)).
 
 =============================================================================
 MODELING STRATEGY
 =============================================================================
-The PDF only reports SEGMENT-LEVEL aggregates (order/user, profit/user by
+The source tables only report SEGMENT-LEVEL aggregates (order/user, profit/user by
 usage tier x test condition). There is no individual-level data. So the
 approach here is:
 
@@ -26,7 +26,7 @@ approach here is:
 
 2. TREATMENT-EFFECT LEVERS (copay / min-spend / voucher-count): each
    lever's effect is estimated from ONLY the specific pair of conditions in
-   the PDF that isolates it, PER discrete tier, then assumed to scale
+   the source tables that isolates it, PER discrete tier, then assumed to scale
    LINEARLY outside the observed copay/min-spend range (this extrapolation
    axis is continuous-dollar, not cross-tier, so it doesn't hit the same
    discontinuity problem). Combinations outside the 7 originally-tested
@@ -40,7 +40,7 @@ approach here is:
 
 Definitions:
 - `copay_usd`: amount the BUYER pays out of pocket for shipping (this is
-  the PDF's "buyer paid $X"). LOWER copay = MORE generous voucher. This is
+  the source deck's "buyer paid $X"). LOWER copay = MORE generous voucher. This is
   the inverse of "platform subsidy amount" — named this way to avoid sign
   confusion, since higher copay empirically REDUCES order rate but
   INCREASES profit-per-order (platform keeps more margin).

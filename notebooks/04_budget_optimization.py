@@ -3,7 +3,7 @@
 #
 # Allocates a fixed subsidy budget across tier x voucher-config options via
 # a greedy fractional knapsack (optimal for the LP relaxation), benchmarks
-# against the PDF's 3 named strategies, and stress-tests the recommendation
+# against the source case study's 3 named strategies, and stress-tests the recommendation
 # against the 3 unvalidated business assumptions. See `budget_allocator.py`
 # for full docstrings and the framing note on why this is a hard-budget-cap
 # problem, not a "spend until marginal ROI hits zero" problem.
@@ -57,7 +57,7 @@ print(f"Total incremental profit: ${summary['total_incremental_profit']:,.2f}")
 print(f"Blended ROI: {summary['blended_roi_pct']:.1f}%")
 
 # %% [markdown]
-# ## Benchmark: PDF's 3 named strategies at the same budget
+# ## Benchmark: source case study's 3 named strategies at the same budget
 
 # %%
 scenario_1 = evaluate_fixed_strategy(econ_table, ["90-99"], "s0_m249_c3", BUDGET_USD)
@@ -78,9 +78,9 @@ scenario_3["blended_roi_pct"] = (
 
 benchmark_table = pd.DataFrame(
     [
-        {"strategy": "PDF Scenario 1 (order-volume max)", **scenario_1},
-        {"strategy": "PDF Scenario 2 (profit-per-user max)", **scenario_2},
-        {"strategy": "PDF Scenario 3 (60/40 blended)", **scenario_3},
+        {"strategy": "Original Strategy 1 (order-volume max)", **scenario_1},
+        {"strategy": "Original Strategy 2 (profit-per-user max)", **scenario_2},
+        {"strategy": "Original Strategy 3 (60/40 blended)", **scenario_3},
         {"strategy": "This project's ROI-ranked allocation", **summary},
     ]
 )

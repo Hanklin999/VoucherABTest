@@ -5,14 +5,14 @@ portfolio.
 =============================================================================
 FRAMING
 =============================================================================
-The PDF's `profit_per_user` is already NET of the shipping subsidy the
+The source case study's `profit_per_user` is already NET of the shipping subsidy the
 platform pays (raising copay from $0 to $9 RAISES profit in most tiers in
 the original tables — that only makes sense if profit already has the
 subsidy cost subtracted out). So this is NOT a "spend until marginal ROI
 hits zero" problem — every tested voucher config could, in principle, be
 net-profitable and you'd still hand out unlimited vouchers.
 
-The real-world constraint the PDF's own "NT$1,000,000 voucher subsidy
+The real-world constraint the source case study's own "NT$1,000,000 voucher subsidy
 budget" scenario describes is different: a finance-approved CAP on total
 GROSS subsidy dollars paid out this quarter, independent of whether the
 program is net-profitable — a common real constraint (cash flow, budget
@@ -21,14 +21,15 @@ cycles, executive approval limits). That's what's modeled here:
     maximize  sum(incremental_net_profit)
     subject to  sum(gross_subsidy_cost) <= BUDGET
 
-`gross_subsidy_cost` is a MODELING ASSUMPTION not given by the PDF (the PDF
+`gross_subsidy_cost` is a MODELING ASSUMPTION not given by the source case study (the source case study
 only reports net profit): cost_per_user = order_rate x voucher_count x
 (shipping_base_cost - copay), i.e. how much the platform pays out per
-redemption, floored at 0. `shipping_base_cost` ($30 USD) and
+redemption, floored at 0. `shipping_base_cost` ($45, provided from the
+project owner's operational knowledge of the original logistics context) and
 `TOTAL_ADDRESSABLE_USERS` (500,000) are reasonable-business-assumption
 placeholders, documented as such — not measured. Budget is converted from
-the PDF's NT$1,000,000 at an assumed ~31.5 TWD/USD, since profit figures in
-the PDF are explicitly labeled USD.
+the source case study's NT$1,000,000 at an assumed ~31.5 TWD/USD, since profit figures in
+the source case study are explicitly labeled USD.
 
 Allocation method: greedy fractional knapsack, ranked by
 incremental-profit-per-dollar-of-cost. This is the OPTIMAL solution to the
@@ -45,8 +46,18 @@ import pandas as pd
 
 TIERS_ASC = ["0-29", "30-69", "70-79", "80-89", "90-99", "100"]
 
-SHIPPING_BASE_COST_USD = 30.0
-TOTAL_ADDRESSABLE_USERS = 500_000
+SHIPPING_BASE_COST_USD = 45.0
+TOTAL_ADDRESSABLE_USERS = 9_000_000
+
+# --- Unit economics (provided from project owner's operational knowledge) ---
+# Per-order platform P&L: revenue = shipping fee charged to buyer (or copay,
+# if a voucher waives part of it) + platform commission on the basket,
+# minus the variable cost of actually shipping the parcel.
+AOV = 450.0                    # average order value
+COMMISSION_RATE = 0.05         # platform take rate on AOV
+SHIPPING_VARIABLE_COST = 15.0  # true variable cost per shipment
+# => profit/order (no voucher)  = 45 + 450*0.05 - 15 = 52.5
+# => profit/order (voucher, copay c) = c + 22.5 - 15 = c + 7.5
 TWD_PER_USD = 31.5
 BUDGET_TWD = 1_000_000.0
 BUDGET_USD = BUDGET_TWD / TWD_PER_USD
@@ -214,7 +225,7 @@ def greedy_fractional_allocation(
 def evaluate_fixed_strategy(
     econ_table: pd.DataFrame, target_tiers: list[str], condition: str, budget: float
 ) -> dict:
-    """Evaluate one of the PDF's named strategies under the SAME budget cap.
+    """Evaluate one of the source case study's named strategies under the SAME budget cap.
 
     Splits the budget evenly (by population) across all listed target tiers
     at the given condition, capped at each tier's population and at the
@@ -256,6 +267,47 @@ def evaluate_fixed_strategy(
     }
 
 
+def unit_economics_cross_check(dgp, twd_per_usd: float = TWD_PER_USD) -> pd.DataFrame:
+    """Cross-check calibrated profit-per-order against real unit economics.
+
+    The project owner's operational P&L implies, per order:
+        no-voucher order:  45 (shipping fee) + 450*5% (commission) - 15 (variable cost) = 52.5 NTD
+        voucher order:     copay + 22.5 - 15 = copay + 7.5 NTD
+
+    The source case study's profit tables are labeled USD, so the comparison converts the
+    unit-economics figure at the assumed FX rate. Interpretation guide:
+    calibrated profit/order should approach the no-voucher unit-economics
+    ceiling (~52.5 NTD) for LOW-usage tiers (whose orders mostly pay full
+    shipping) and fall well below it for HIGH-usage tiers (whose orders
+    mostly have shipping revenue waived already) — if the calibrated numbers
+    violate that ordering, either the calibration or the unit-economics
+    understanding is wrong.
+
+    Args:
+        dgp: A fitted VoucherDGP instance.
+        twd_per_usd: FX rate used to put both sides in the same currency.
+
+    Returns:
+        DataFrame comparing calibrated baseline profit/order per tier (USD)
+        against the unit-economics ceiling.
+    """
+    from data_generation import TIERS_ASC as DGP_TIERS
+
+    unit_econ_no_voucher_ntd = (
+        SHIPPING_BASE_COST_USD + AOV * COMMISSION_RATE - SHIPPING_VARIABLE_COST
+    )
+    ceiling_usd = unit_econ_no_voucher_ntd / twd_per_usd
+
+    return pd.DataFrame(
+        {
+            "tier": DGP_TIERS,
+            "calibrated_profit_per_order_usd": dgp.base_profit_per_order.round(3),
+            "unit_econ_ceiling_usd": round(ceiling_usd, 3),
+            "share_of_ceiling": (dgp.base_profit_per_order / ceiling_usd).round(3),
+        }
+    )
+
+
 def sensitivity_analysis(calibration: pd.DataFrame, calibration_path: str = "data/raw_benchmarks/case_summary_tables.csv") -> pd.DataFrame:
     """Sweep the three unvalidated business assumptions and re-run allocation.
 
@@ -279,8 +331,8 @@ def sensitivity_analysis(calibration: pd.DataFrame, calibration_path: str = "dat
 
     dgp = VoucherDGP(calibration_path=calibration_path)
     scenarios = []
-    for base_cost in [20.0, 30.0, 40.0]:
-        for total_pop in [250_000, 500_000, 1_000_000]:
+    for base_cost in [35.0, 45.0, 55.0]:
+        for total_pop in [4_500_000, 9_000_000, 18_000_000]:
             for fx in [28.0, 31.5, 35.0]:
                 budget_usd = BUDGET_TWD / fx
                 econ_table = build_tier_condition_table(
@@ -317,6 +369,11 @@ def main() -> None:
 
     econ_table = build_tier_condition_table(dgp, calibration)
     print("=" * 70)
+    print("UNIT ECONOMICS CROSS-CHECK (calibrated profit/order vs. real P&L ceiling)")
+    print("=" * 70)
+    print(unit_economics_cross_check(dgp).to_string(index=False))
+
+    print("\n" + "=" * 70)
     print(f"BUDGET: NT${BUDGET_TWD:,.0f} = ${BUDGET_USD:,.2f} USD (at {TWD_PER_USD} TWD/USD)")
     print(f"ADDRESSABLE POPULATION: {TOTAL_ADDRESSABLE_USERS:,} users")
     print("=" * 70)
@@ -337,7 +394,7 @@ def main() -> None:
     print(f"Blended ROI: {summary['blended_roi_pct']:.1f}%")
 
     print("\n" + "=" * 70)
-    print("BENCHMARK: PDF's 3 named strategies, evaluated at the SAME budget")
+    print("BENCHMARK: source case study's 3 named strategies, evaluated at the SAME budget")
     print("=" * 70)
     scenario_1 = evaluate_fixed_strategy(econ_table, ["90-99"], "s0_m249_c3", BUDGET_USD)
     scenario_2 = evaluate_fixed_strategy(econ_table, ["30-69"], "s9_m249_c3", BUDGET_USD)
