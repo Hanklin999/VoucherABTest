@@ -166,6 +166,22 @@ big_comparisons[big_comparisons["significant"]][
 ]
 
 # %% [markdown]
+# The forest plot below is the visual form of this before/after: same 24
+# order-rate estimates, two sample sizes. Left, every CI spans zero;
+# right, the large-true-effect cells (red) separate from zero while the
+# negligible ones stay put.
+
+# %%
+from IPython.display import Image
+
+from visualization import plot_forest_comparison
+
+plot_forest_comparison(
+    comparisons, big_comparisons, "../outputs/figures/forest_200k_vs_750k.png"
+)
+Image("../outputs/figures/forest_200k_vs_750k.png")
+
+# %% [markdown]
 # Significance emerges exactly where the power analysis predicted —
 # in the cells with large true effects — while the negligible-true-effect
 # cells correctly stay null even at 3.75x the sample. This closes the

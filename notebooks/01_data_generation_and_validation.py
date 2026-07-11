@@ -62,7 +62,18 @@ print(f"Profit cells outside +/-{TOLERANCE_PCT}%: {n_fail_profit} / {len(recover
 # %% [markdown]
 # Residual misses concentrate in the 90-99% tier under stacked
 # copay+count extrapolation — see DGP_ASSUMPTIONS.md for why this is a
-# plausible real copay x count interaction, not a bug.
+# plausible real copay x count interaction, not a bug. The scatter below
+# makes the recovery visible: each point is one (tier, condition) cell,
+# the band is the ±15% tolerance, and the annotated red diamonds are the
+# cells outside it.
+
+# %%
+from IPython.display import Image
+
+from visualization import plot_calibration_scatter
+
+plot_calibration_scatter(dgp, "../outputs/figures/calibration_scatter.png")
+Image("../outputs/figures/calibration_scatter.png")
 
 # %% [markdown]
 # ## Check 2 — Sampling-noise sanity check

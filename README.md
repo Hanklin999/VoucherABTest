@@ -82,6 +82,8 @@ Unlike a typical simulated portfolio project, this one treats "did the simulatio
 
 Residual misses concentrate in the `90-99%` tier under stacked copay+count extrapolation — most likely a real copay×count interaction the additive model can't capture, which the case's own narrative supports (it explicitly calls out that the count effect "concentrates" in this tier). Documented, not hidden, in `DGP_ASSUMPTIONS.md`.
 
+![Calibration scatter](outputs/figures/calibration_scatter.png)
+
 ---
 
 ## Methods
@@ -102,6 +104,8 @@ Residual misses concentrate in the `90-99%` tier under stacked copay+count extra
 ### 1. None of the 4 headline comparisons survive multiple-comparison correction at current sample size
 
 Every named comparison (voucher vs. none, min-spend threshold, copay, voucher count) trends in the direction the source case reports — but after FDR correction across 24 tests, **0 are significant**. A power analysis pins down why: the `90-99%` tier's observed 29.6% order-rate lift would need ~4,000 users per arm to detect at 80% power after correction; the simulated cell has ~1,060, with a minimum detectable effect of ~60% — double the observed lift. Rerunning the same DGP at the prescribed N=750k recovers **7/48 significant**, exactly in the large-true-effect cells, while negligible-true-effect cells correctly stay null — closing the loop on the diagnosis. **This is the headline finding, not a footnote**: any real follow-up test needs a proper power calculation (and ideally stratified oversampling of the small high-value tiers) before launch, not just a plausible-looking sample size. Notebook 02 runs the full readout in platform order: SRM trust check first, then CIs, direction-concordance against ground truth, and a per-cell power/MDE table. The paired result files — `outputs/named_comparisons.csv` (N=200k, 0/48 significant) vs. `outputs/named_comparisons_powered_750k.csv` (N=750k, 7/48) — are the before/after evidence of the diagnosis.
+
+![Forest plot: 200k vs 750k](outputs/figures/forest_200k_vs_750k.png)
 
 ### 2. A flexible uplift model doesn't earn its complexity here
 
@@ -155,7 +159,9 @@ VoucherABTest/
 ├── outputs/
 │   ├── figures/
 │   │   ├── tier_lever_heatmap.png
-│   │   └── budget_efficiency_frontier.png
+│   │   ├── budget_efficiency_frontier.png
+│   │   ├── forest_200k_vs_750k.png
+│   │   └── calibration_scatter.png
 │   ├── named_comparisons.csv
 │   ├── named_comparisons_powered_750k.csv
 │   ├── power_mde_table.csv
