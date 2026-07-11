@@ -7,12 +7,19 @@
 # docstrings and the reasoning behind this comparison.
 
 # %%
+import os
 import sys
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent   # notebooks/
-ROOT = HERE.parent                        # VoucherABTest/
-sys.path.insert(0, str(ROOT))
+# Anchor all relative paths to THIS file's location, not the caller's cwd —
+# so the notebook works whether run via Jupyter (kernel cwd = notebooks/) or
+# as a script from anywhere (e.g. `python notebooks/00_....py` from repo root).
+try:
+    NOTEBOOK_DIR = Path(__file__).resolve().parent
+except NameError:  # __file__ undefined inside a notebook kernel
+    NOTEBOOK_DIR = Path.cwd()
+os.chdir(NOTEBOOK_DIR)
+sys.path.insert(0, str(NOTEBOOK_DIR.parent))
 
 import pandas as pd
 from sklearn.model_selection import train_test_split

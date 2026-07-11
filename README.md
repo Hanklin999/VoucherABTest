@@ -140,7 +140,7 @@ Caveats that matter more than the headline number:
 ## Repository Structure
 
 ```
-VoucherROI-ProductScience/
+VoucherABTest/
 ├── data/
 │   ├── raw_benchmarks/
 │   │   └── case_summary_tables.csv
@@ -194,7 +194,7 @@ python budget_allocator.py            # budget-constrained allocation
 - **Source data is aggregate-only.** Every individual-level number in this project is a reconstruction calibrated to match reported segment aggregates — real individual-level data doesn't exist here, and the original case study itself is explicitly disclaimed as an anonymized/synthesized illustrative case.
 - **Additive lever model.** Copay, min-spend, and voucher-count effects are combined additively; the one clear sign of a real interaction (copay×count in the `90-99%` tier) isn't modeled, by necessity of data sparsity.
 - **Underpowered as sized.** See Finding #1 — this is a simulation of what the experiment *would* look like at a specific (assumed) sample size, not a claim that the effects aren't real at the scale the original case actually ran at.
-- **Budget-allocation assumptions are unvalidated.** Population size, shipping cost basis, and FX rate are stated business assumptions; the ranking is sensitive to all three.
+- **FX rate is the one remaining assumption.** Shipping cost basis (45), addressable population (9M accounts), and per-order unit economics are provided operational figures; the TWD/USD rate (31.5) remains assumed, needed only because the source tables label profit in USD while the budget is NTD. The sensitivity sweep shows the recommended allocation is robust to it.
 
 ---
 

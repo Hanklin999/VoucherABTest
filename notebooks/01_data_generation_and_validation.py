@@ -9,12 +9,19 @@
 # anchor conflation).
 
 # %%
+import os
 import sys
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent   # notebooks/
-ROOT = HERE.parent                        # VoucherABTest/
-sys.path.insert(0, str(ROOT))
+# Anchor all relative paths to THIS file's location, not the caller's cwd —
+# so the notebook works whether run via Jupyter (kernel cwd = notebooks/) or
+# as a script from anywhere (e.g. `python notebooks/00_....py` from repo root).
+try:
+    NOTEBOOK_DIR = Path(__file__).resolve().parent
+except NameError:  # __file__ undefined inside a notebook kernel
+    NOTEBOOK_DIR = Path.cwd()
+os.chdir(NOTEBOOK_DIR)
+sys.path.insert(0, str(NOTEBOOK_DIR.parent))
 
 import pandas as pd
 
@@ -30,18 +37,11 @@ from validation import (
 # ## Generate the individual-level experiment log
 
 # %%
-calibration_path = ROOT / "data" / "raw_benchmarks" / "case_summary_tables.csv"
-processed_dir = ROOT / "data" / "processed"
-processed_dir.mkdir(parents=True, exist_ok=True)
-
-dgp = VoucherDGP(calibration_path=calibration_path)
+dgp = VoucherDGP(calibration_path="../data/raw_benchmarks/case_summary_tables.csv")
 experiment_log = dgp.simulate_users()
-
-output_path = processed_dir / "experiment_log.csv"
-experiment_log.to_csv(output_path, index=False)
-
+experiment_log.to_csv("../data/processed/experiment_log.csv", index=False)
 print(f"Simulated {len(experiment_log):,} users")
-print(experiment_log.head())
+experiment_log.head()
 
 # %% [markdown]
 # ## Check 1 — Aggregation recovery vs. the 7 originally-tested conditions

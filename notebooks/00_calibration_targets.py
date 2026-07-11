@@ -7,12 +7,19 @@
 # full transcription and the tier-label harmonization note.
 
 # %%
+import os
 import sys
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent   # notebooks/
-ROOT = HERE.parent                        # VoucherABTest/
-sys.path.insert(0, str(ROOT))
+# Anchor all relative paths to THIS file's location, not the caller's cwd —
+# so the notebook works whether run via Jupyter (kernel cwd = notebooks/) or
+# as a script from anywhere (e.g. `python notebooks/00_....py` from repo root).
+try:
+    NOTEBOOK_DIR = Path(__file__).resolve().parent
+except NameError:  # __file__ undefined inside a notebook kernel
+    NOTEBOOK_DIR = Path.cwd()
+os.chdir(NOTEBOOK_DIR)
+sys.path.insert(0, str(NOTEBOOK_DIR.parent))
 
 from build_calibration_targets import build_calibration_table
 
@@ -21,11 +28,8 @@ from build_calibration_targets import build_calibration_table
 
 # %%
 calibration = build_calibration_table()
-
-output_path = ROOT / "data" / "raw_benchmarks" / "case_summary_tables.csv"
-calibration.to_csv(output_path, index=False)
-
-print(f"{len(calibration)} rows written to {output_path}")
+calibration.to_csv("../data/raw_benchmarks/case_summary_tables.csv", index=False)
+print(f"{len(calibration)} rows written to data/raw_benchmarks/case_summary_tables.csv")
 calibration.head(10)
 
 # %% [markdown]

@@ -7,12 +7,19 @@
 # `experiment_analysis.py` for full docstrings.
 
 # %%
+import os
 import sys
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent   # notebooks/
-ROOT = HERE.parent                        # VoucherABTest/
-sys.path.insert(0, str(ROOT))
+# Anchor all relative paths to THIS file's location, not the caller's cwd —
+# so the notebook works whether run via Jupyter (kernel cwd = notebooks/) or
+# as a script from anywhere (e.g. `python notebooks/00_....py` from repo root).
+try:
+    NOTEBOOK_DIR = Path(__file__).resolve().parent
+except NameError:  # __file__ undefined inside a notebook kernel
+    NOTEBOOK_DIR = Path.cwd()
+os.chdir(NOTEBOOK_DIR)
+sys.path.insert(0, str(NOTEBOOK_DIR.parent))
 
 import pandas as pd
 
@@ -24,25 +31,15 @@ from experiment_analysis import (
     TIERS_ASC,
 )
 
-# 讀取模擬實驗 log
-experiment_log_path = ROOT / "data" / "processed" / "experiment_log.csv"
-experiment_log = pd.read_csv(experiment_log_path)
+experiment_log = pd.read_csv("../data/processed/experiment_log.csv")
 
 # %% [markdown]
 # ## Named comparisons (mirrors the source case study's 4 Key Insights), FDR-corrected
 
 # %%
 comparisons = run_named_comparisons(experiment_log)
-
-# 確保 outputs 資料夾存在
-outputs_dir = ROOT / "outputs"
-outputs_dir.mkdir(parents=True, exist_ok=True)
-
-comparisons_path = outputs_dir / "named_comparisons.csv"
-comparisons.to_csv(comparisons_path, index=False)
-
-cols = ["comparison", "tier", "metric", "pct_lift", "p_value", "q_value", "significant"]
-print(comparisons[cols].head())
+comparisons.to_csv("../outputs/named_comparisons.csv", index=False)
+comparisons[["comparison", "tier", "metric", "pct_lift", "p_value", "q_value", "significant"]]
 
 # %% [markdown]
 # **Headline finding: 0 of 48 comparisons are significant after FDR
