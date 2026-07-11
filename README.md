@@ -101,7 +101,7 @@ Residual misses concentrate in the `90-99%` tier under stacked copay+count extra
 
 ### 1. None of the 4 headline comparisons survive multiple-comparison correction at current sample size
 
-Every named comparison (voucher vs. none, min-spend threshold, copay, voucher count) trends in the direction the source case reports — but after FDR correction across 24 tests, **0 are significant**. A power analysis pins down why: the `90-99%` tier's observed 29.6% order-rate lift would need ~4,000 users per arm to detect at 80% power after correction; the simulated cell has 1,088. **This is the headline finding, not a footnote** — it means the original case's "significant" results likely ran on a much larger population than this reconstruction assumes, and any real follow-up test needs a proper power calculation before launch, not just a plausible-looking sample size.
+Every named comparison (voucher vs. none, min-spend threshold, copay, voucher count) trends in the direction the source case reports — but after FDR correction across 24 tests, **0 are significant**. A power analysis pins down why: the `90-99%` tier's observed 29.6% order-rate lift would need ~4,000 users per arm to detect at 80% power after correction; the simulated cell has ~1,060, with a minimum detectable effect of ~60% — double the observed lift. Rerunning the same DGP at the prescribed N=750k recovers **7/48 significant**, exactly in the large-true-effect cells, while negligible-true-effect cells correctly stay null — closing the loop on the diagnosis. **This is the headline finding, not a footnote**: any real follow-up test needs a proper power calculation (and ideally stratified oversampling of the small high-value tiers) before launch, not just a plausible-looking sample size. Notebook 02 runs the full readout in platform order: SRM trust check first, then CIs, direction-concordance against ground truth, and a per-cell power/MDE table.
 
 ### 2. A flexible uplift model doesn't earn its complexity here
 
@@ -157,6 +157,7 @@ VoucherABTest/
 │   │   ├── tier_lever_heatmap.png
 │   │   └── budget_efficiency_frontier.png
 │   ├── named_comparisons.csv
+│   ├── power_mde_table.csv
 │   ├── targeting_priority.csv
 │   └── sensitivity_analysis.csv
 ├── build_calibration_targets.py

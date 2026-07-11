@@ -1,49 +1,49 @@
-comparison,description,tier,metric,mean_a,mean_b,pct_lift,stat,p_value,q_value,significant
-voucher_vs_none,Any voucher vs. no voucher issued,0-29,order_rate,0.08328,0.08046,3.49602,0.791,0.42894,0.98064,False
-voucher_vs_none,Any voucher vs. no voucher issued,0-29,profit_per_user,0.1617,0.15385,5.10436,1.07411,0.28278,0.56557,False
-voucher_vs_none,Any voucher vs. no voucher issued,30-69,order_rate,0.09694,0.10241,-5.34415,-0.93647,0.34903,0.98064,False
-voucher_vs_none,Any voucher vs. no voucher issued,30-69,profit_per_user,0.13995,0.16498,-15.16982,-2.61324,0.00898,0.1756,False
-voucher_vs_none,Any voucher vs. no voucher issued,70-79,order_rate,0.10016,0.07882,27.07146,2.64918,0.00807,0.19365,False
-voucher_vs_none,Any voucher vs. no voucher issued,70-79,profit_per_user,0.09623,0.09239,4.16459,0.42469,0.67108,0.89478,False
-voucher_vs_none,Any voucher vs. no voucher issued,80-89,order_rate,0.10142,0.08705,16.50106,1.65304,0.09832,0.58994,False
-voucher_vs_none,Any voucher vs. no voucher issued,80-89,profit_per_user,0.07595,0.07692,-1.25217,-0.128,0.89815,0.9725,False
-voucher_vs_none,Any voucher vs. no voucher issued,90-99,order_rate,0.11792,0.09099,29.59787,2.04185,0.04117,0.32933,False
-voucher_vs_none,Any voucher vs. no voucher issued,90-99,profit_per_user,0.06459,0.05393,19.7742,1.33206,0.18298,0.54987,False
-voucher_vs_none,Any voucher vs. no voucher issued,100,order_rate,0.03511,0.0331,6.06952,0.58949,0.55553,0.98064,False
-voucher_vs_none,Any voucher vs. no voucher issued,100,profit_per_user,0.02564,0.03134,-18.19314,-1.86992,0.06152,0.36913,False
-minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),0-29,order_rate,0.08212,0.08328,-1.39604,-0.32666,0.74393,0.98064,False
-minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),0-29,profit_per_user,0.1521,0.1617,-5.93365,-1.33073,0.18329,0.54987,False
-minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),30-69,order_rate,0.09651,0.09694,-0.43695,-0.07397,0.94103,0.98064,False
-minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),30-69,profit_per_user,0.14221,0.13995,1.61561,0.25405,0.79946,0.95935,False
-minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),70-79,order_rate,0.09465,0.10016,-5.50471,-0.65551,0.51214,0.98064,False
-minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),70-79,profit_per_user,0.101,0.09623,4.95831,0.52739,0.59795,0.89478,False
-minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),80-89,order_rate,0.1009,0.10142,-0.50505,-0.05677,0.95473,0.98064,False
-minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),80-89,profit_per_user,0.0893,0.07595,17.5701,1.69029,0.09104,0.42117,False
-minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),90-99,order_rate,0.13017,0.11792,10.38171,0.86924,0.38472,0.98064,False
-minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),90-99,profit_per_user,0.08162,0.06459,26.35605,1.91417,0.05573,0.36913,False
-minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),100,order_rate,0.03536,0.03511,0.72271,0.07294,0.94185,0.98064,False
-minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),100,profit_per_user,0.02918,0.02564,13.82487,1.22624,0.22014,0.56557,False
-copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),0-29,order_rate,0.0837,0.08328,0.50762,0.11841,0.90574,0.98064,False
-copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),0-29,profit_per_user,0.16189,0.1617,0.12046,0.02627,0.97904,0.97904,False
-copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),30-69,order_rate,0.10064,0.09694,3.8237,0.63947,0.52252,0.98064,False
-copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),30-69,profit_per_user,0.14735,0.13995,5.28808,0.81932,0.41262,0.76176,False
-copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),70-79,order_rate,0.10166,0.10016,1.49512,0.17358,0.8622,0.98064,False
-copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),70-79,profit_per_user,0.1066,0.09623,10.77513,1.12108,0.26231,0.56557,False
-copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),80-89,order_rate,0.10538,0.10142,3.90859,0.4361,0.66277,0.98064,False
-copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),80-89,profit_per_user,0.08848,0.07595,16.49647,1.62005,0.10529,0.42117,False
-copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),90-99,order_rate,0.10858,0.11792,-7.92701,-0.68495,0.49338,0.98064,False
-copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),90-99,profit_per_user,0.06531,0.06459,1.10669,0.08536,0.93198,0.9725,False
-copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),100,order_rate,0.0331,0.03511,-5.70902,-0.58727,0.55702,0.98064,False
-copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),100,profit_per_user,0.02697,0.02564,5.19841,0.47775,0.63284,0.89478,False
-count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),0-29,order_rate,0.07689,0.07988,-3.74622,-0.85476,0.39268,0.98064,False
-count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),0-29,profit_per_user,0.14911,0.15697,-5.00459,-1.07791,0.28109,0.56557,False
-count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),30-69,order_rate,0.09922,0.11187,-11.30519,-2.1136,0.03455,0.32933,False
-count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),30-69,profit_per_user,0.14978,0.17357,-13.7095,-2.44174,0.01463,0.1756,False
-count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),70-79,order_rate,0.10397,0.10376,0.20247,0.02427,0.98064,0.98064,False
-count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),70-79,profit_per_user,0.11182,0.11816,-5.36688,-0.61924,0.53578,0.89478,False
-count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),80-89,order_rate,0.08698,0.09049,-3.88563,-0.41412,0.67879,0.98064,False
-count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),80-89,profit_per_user,0.06813,0.06753,0.89138,0.08744,0.93032,0.9725,False
-count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),90-99,order_rate,0.08947,0.08832,1.30475,0.09409,0.92504,0.98064,False
-count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),90-99,profit_per_user,0.04839,0.04588,5.47566,0.36086,0.71824,0.90725,False
-count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),100,order_rate,0.03384,0.03308,2.28242,0.22046,0.82551,0.98064,False
-count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),100,profit_per_user,0.02952,0.03098,-4.71709,-0.44069,0.65944,0.89478,False
+comparison,description,tier,metric,mean_a,mean_b,abs_diff,ci_low,ci_high,pct_lift,stat,p_value,q_value,significant
+voucher_vs_none,Any voucher vs. no voucher issued,0-29,order_rate,0.08328,0.08046,0.00281,-0.00416,0.00979,3.49602,0.791,0.42894,0.98064,False
+voucher_vs_none,Any voucher vs. no voucher issued,0-29,profit_per_user,0.1617,0.15385,0.00785,-0.00648,0.02218,5.10436,1.07411,0.28278,0.56557,False
+voucher_vs_none,Any voucher vs. no voucher issued,30-69,order_rate,0.09694,0.10241,-0.00547,-0.01695,0.00599,-5.34415,-0.93647,0.34903,0.98064,False
+voucher_vs_none,Any voucher vs. no voucher issued,30-69,profit_per_user,0.13995,0.16498,-0.02503,-0.0438,-0.00625,-15.16982,-2.61324,0.00898,0.1756,False
+voucher_vs_none,Any voucher vs. no voucher issued,70-79,order_rate,0.10016,0.07882,0.02134,0.00554,0.03723,27.07146,2.64918,0.00807,0.19365,False
+voucher_vs_none,Any voucher vs. no voucher issued,70-79,profit_per_user,0.09623,0.09239,0.00385,-0.01391,0.02161,4.16459,0.42469,0.67108,0.89478,False
+voucher_vs_none,Any voucher vs. no voucher issued,80-89,order_rate,0.10142,0.08705,0.01436,-0.00269,0.03145,16.50106,1.65304,0.09832,0.58994,False
+voucher_vs_none,Any voucher vs. no voucher issued,80-89,profit_per_user,0.07595,0.07692,-0.00096,-0.01571,0.01379,-1.25217,-0.128,0.89815,0.9725,False
+voucher_vs_none,Any voucher vs. no voucher issued,90-99,order_rate,0.11792,0.09099,0.02693,0.00104,0.05299,29.59787,2.04185,0.04117,0.32933,False
+voucher_vs_none,Any voucher vs. no voucher issued,90-99,profit_per_user,0.06459,0.05393,0.01066,-0.00504,0.02636,19.7742,1.33206,0.18298,0.54987,False
+voucher_vs_none,Any voucher vs. no voucher issued,100,order_rate,0.03511,0.0331,0.00201,-0.00469,0.00872,6.06952,0.58949,0.55553,0.98064,False
+voucher_vs_none,Any voucher vs. no voucher issued,100,profit_per_user,0.02564,0.03134,-0.0057,-0.01168,0.00028,-18.19314,-1.86992,0.06152,0.36913,False
+minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),0-29,order_rate,0.08212,0.08328,-0.00116,-0.00814,0.00582,-1.39604,-0.32666,0.74393,0.98064,False
+minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),0-29,profit_per_user,0.1521,0.1617,-0.00959,-0.02373,0.00454,-5.93365,-1.33073,0.18329,0.54987,False
+minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),30-69,order_rate,0.09651,0.09694,-0.00042,-0.01166,0.01081,-0.43695,-0.07397,0.94103,0.98064,False
+minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),30-69,profit_per_user,0.14221,0.13995,0.00226,-0.01518,0.01971,1.61561,0.25405,0.79946,0.95935,False
+minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),70-79,order_rate,0.09465,0.10016,-0.00551,-0.02205,0.01099,-5.50471,-0.65551,0.51214,0.98064,False
+minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),70-79,profit_per_user,0.101,0.09623,0.00477,-0.01297,0.02251,4.95831,0.52739,0.59795,0.89478,False
+minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),80-89,order_rate,0.1009,0.10142,-0.00051,-0.01822,0.01723,-0.50505,-0.05677,0.95473,0.98064,False
+minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),80-89,profit_per_user,0.0893,0.07595,0.01334,-0.00213,0.02882,17.5701,1.69029,0.09104,0.42117,False
+minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),90-99,order_rate,0.13017,0.11792,0.01224,-0.01548,0.03979,10.38171,0.86924,0.38472,0.98064,False
+minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),90-99,profit_per_user,0.08162,0.06459,0.01702,-0.00042,0.03447,26.35605,1.91417,0.05573,0.36913,False
+minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),100,order_rate,0.03536,0.03511,0.00025,-0.00658,0.00711,0.72271,0.07294,0.94185,0.98064,False
+minspend_299_vs_249,Raise min-spend $249 -> $299 (same copay/count),100,profit_per_user,0.02918,0.02564,0.00354,-0.00212,0.00921,13.82487,1.22624,0.22014,0.56557,False
+copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),0-29,order_rate,0.0837,0.08328,0.00042,-0.00658,0.00742,0.50762,0.11841,0.90574,0.98064,False
+copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),0-29,profit_per_user,0.16189,0.1617,0.00019,-0.01434,0.01473,0.12046,0.02627,0.97904,0.97904,False
+copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),30-69,order_rate,0.10064,0.09694,0.00371,-0.00766,0.01508,3.8237,0.63947,0.52252,0.98064,False
+copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),30-69,profit_per_user,0.14735,0.13995,0.0074,-0.01031,0.02511,5.28808,0.81932,0.41262,0.76176,False
+copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),70-79,order_rate,0.10166,0.10016,0.0015,-0.01543,0.01846,1.49512,0.17358,0.8622,0.98064,False
+copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),70-79,profit_per_user,0.1066,0.09623,0.01037,-0.00776,0.0285,10.77513,1.12108,0.26231,0.56557,False
+copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),80-89,order_rate,0.10538,0.10142,0.00396,-0.01388,0.02183,3.90859,0.4361,0.66277,0.98064,False
+copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),80-89,profit_per_user,0.08848,0.07595,0.01253,-0.00263,0.02769,16.49647,1.62005,0.10529,0.42117,False
+copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),90-99,order_rate,0.10858,0.11792,-0.00935,-0.03626,0.01745,-7.92701,-0.68495,0.49338,0.98064,False
+copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),90-99,profit_per_user,0.06531,0.06459,0.00071,-0.01571,0.01714,1.10669,0.08536,0.93198,0.9725,False
+copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),100,order_rate,0.0331,0.03511,-0.002,-0.00872,0.00471,-5.70902,-0.58727,0.55702,0.98064,False
+copay_9_vs_0,Raise buyer copay $0 -> $9 (same min-spend/count),100,profit_per_user,0.02697,0.02564,0.00133,-0.00414,0.0068,5.19841,0.47775,0.63284,0.89478,False
+count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),0-29,order_rate,0.07689,0.07988,-0.00299,-0.00985,0.00387,-3.74622,-0.85476,0.39268,0.98064,False
+count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),0-29,profit_per_user,0.14911,0.15697,-0.00786,-0.02214,0.00643,-5.00459,-1.07791,0.28109,0.56557,False
+count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),30-69,order_rate,0.09922,0.11187,-0.01265,-0.02439,-0.00092,-11.30519,-2.1136,0.03455,0.32933,False
+count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),30-69,profit_per_user,0.14978,0.17357,-0.0238,-0.0429,-0.00469,-13.7095,-2.44174,0.01463,0.1756,False
+count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),70-79,order_rate,0.10397,0.10376,0.00021,-0.01681,0.01719,0.20247,0.02427,0.98064,0.98064,False
+count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),70-79,profit_per_user,0.11182,0.11816,-0.00634,-0.02642,0.01373,-5.36688,-0.61924,0.53578,0.89478,False
+count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),80-89,order_rate,0.08698,0.09049,-0.00352,-0.02026,0.01313,-3.88563,-0.41412,0.67879,0.98064,False
+count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),80-89,profit_per_user,0.06813,0.06753,0.0006,-0.01289,0.0141,0.89138,0.08744,0.93032,0.9725,False
+count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),90-99,order_rate,0.08947,0.08832,0.00115,-0.02296,0.02531,1.30475,0.09409,0.92504,0.98064,False
+count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),90-99,profit_per_user,0.04839,0.04588,0.00251,-0.01114,0.01616,5.47566,0.36086,0.71824,0.90725,False
+count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),100,order_rate,0.03384,0.03308,0.00076,-0.00599,0.0075,2.28242,0.22046,0.82551,0.98064,False
+count_3_vs_1,Issue 3 vouchers instead of 1 (same copay/min-spend),100,profit_per_user,0.02952,0.03098,-0.00146,-0.00796,0.00504,-4.71709,-0.44069,0.65944,0.89478,False
