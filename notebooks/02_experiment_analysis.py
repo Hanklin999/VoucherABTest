@@ -153,6 +153,7 @@ print(
 # %%
 big_log = dgp.simulate_users(n_users=750_000, seed=7)
 big_comparisons = run_named_comparisons(big_log)
+big_comparisons.to_csv("../outputs/named_comparisons_powered_750k.csv", index=False)
 
 n_sig_small = int(comparisons["significant"].sum())
 n_sig_big = int(big_comparisons["significant"].sum())
