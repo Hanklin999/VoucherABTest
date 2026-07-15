@@ -211,6 +211,54 @@ CONDITION_PARAMS: dict[str, tuple[float, float, int]] = {
 COMPARISON_MAP = {name: (a, b) for name, a, b, _ in NAMED_COMPARISONS}
 
 
+def primary_pooled_estimate(df: pd.DataFrame, outcome: str = "ordered") -> dict:
+    """Population-weighted primary readout: any voucher vs. control, one number.
+
+    The headline estimate a decision memo leads with: the effect of issuing
+    ANY voucher (all 6 treatment arms pooled) vs. control on the primary
+    metric, estimated within each tier and combined with tier-population
+    weights — a stratified difference-in-means, which is unbiased here
+    because randomization is within-tier by design. Pooling arms answers
+    the program-level question ("does the voucher program move orders?");
+    the per-cell named comparisons answer the design question ("which
+    configuration, for whom?").
+
+    Args:
+        df: Individual-level experiment log.
+        outcome: Binary outcome column to estimate on (default: `ordered`).
+
+    Returns:
+        Dict with the weighted absolute difference (percentage points),
+        relative lift vs. the weighted control mean, 95% CI, z-statistic,
+        and p-value.
+    """
+    est, var, ctrl_mean_weighted = 0.0, 0.0, 0.0
+    total_n = len(df)
+    for tier in TIERS_ASC:
+        tier_df = df[df["tier"] == tier]
+        weight = len(tier_df) / total_n
+        treat = tier_df[tier_df["condition"] != "no_voucher"][outcome]
+        ctrl = tier_df[tier_df["condition"] == "no_voucher"][outcome]
+        diff = treat.mean() - ctrl.mean()
+        cell_var = treat.var(ddof=1) / len(treat) + ctrl.var(ddof=1) / len(ctrl)
+        est += weight * diff
+        var += weight**2 * cell_var
+        ctrl_mean_weighted += weight * ctrl.mean()
+
+    se = np.sqrt(var)
+    z = est / se
+    p_value = 2 * (1 - stats.norm.cdf(abs(z)))
+    return {
+        "abs_diff_pp": est * 100,
+        "relative_lift_pct": est / ctrl_mean_weighted * 100,
+        "ci_low_pp": (est - 1.96 * se) * 100,
+        "ci_high_pp": (est + 1.96 * se) * 100,
+        "z": z,
+        "p_value": p_value,
+        "control_mean": ctrl_mean_weighted,
+    }
+
+
 def srm_check(df: pd.DataFrame, alarm_threshold: float = 0.001) -> pd.DataFrame:
     """Sample Ratio Mismatch check: did randomization deliver the designed split?
 

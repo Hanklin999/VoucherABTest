@@ -66,7 +66,34 @@ assert not srm["srm_alarm"].any(), "SRM detected — do not read results until a
 print("SRM check passed for all tiers — safe to read results.")
 
 # %% [markdown]
-# ## 2. Named comparisons (mirrors the source case study's 4 Key Insights)
+# ## 2. Primary readout: does the voucher program move orders at all?
+#
+# One number before 48: the population-weighted stratified estimate of ANY
+# voucher vs. control on the primary metric. This answers the
+# program-level question; the per-cell comparisons below answer the design
+# question (which configuration, for whom).
+
+# %%
+from experiment_analysis import primary_pooled_estimate
+
+primary = primary_pooled_estimate(experiment_log)
+print(
+    f"Vouchers lift order rate by {primary['abs_diff_pp']:+.2f} pp "
+    f"(95% CI [{primary['ci_low_pp']:+.2f}, {primary['ci_high_pp']:+.2f}]), "
+    f"a {primary['relative_lift_pct']:+.1f}% relative lift on a "
+    f"{primary['control_mean']:.1%} control base — p = {primary['p_value']:.3f}"
+)
+
+# %% [markdown]
+# **The program-level effect is significant even at N=200k** — pooling all
+# 6 treatment arms and weighting across tiers buys enough power for the
+# coarse question. The tension that drives the rest of this notebook: the
+# *design* questions (which lever, which tier) fragment that power across
+# 48 cells, and none survives. "The program works; we can't yet say which
+# version for whom" is the honest state of the evidence.
+
+# %% [markdown]
+# ## 3. Named comparisons (mirrors the source case study's 4 Key Insights)
 #
 # Two-proportion z-tests (order rate) and Welch t-tests (profit/user) per
 # tier, now with 95% CIs on the absolute difference, BH-FDR corrected
@@ -86,7 +113,7 @@ comparisons[
 # different explanations hiding inside that headline number.
 
 # %% [markdown]
-# ## 3. Direction concordance vs. ground truth
+# ## 4. Direction concordance vs. ground truth
 #
 # Because the true effects were calibrated into the DGP, every comparison
 # can be classified: does the observed sign match the true sign, or was it
@@ -115,7 +142,7 @@ concordance[concordance["sign_agrees"] == False]  # noqa: E712 — the sign-flip
 # cells are NOT failures: for them, "not significant" is the truth.
 
 # %% [markdown]
-# ## 4. Power & MDE table (order-rate metric, Bonferroni-corrected)
+# ## 5. Power & MDE table (order-rate metric, Bonferroni-corrected)
 #
 # Two complementary views per comparison x tier:
 # - **required_n_per_arm** — how big the experiment needed to be to detect
@@ -141,7 +168,7 @@ print(
 )
 
 # %% [markdown]
-# ## 5. Adequately-powered rerun
+# ## 6. Adequately-powered rerun
 #
 # The naive fix is scaling total N until the smallest key tier hits its
 # required per-arm size: the 90-99% tier is 3.7% of the population, so
@@ -191,7 +218,7 @@ Image("../outputs/figures/forest_200k_vs_750k.png")
 # oversampling of the 90-99% tier).
 
 # %% [markdown]
-# ## 6. Interaction regression (tier x condition), cross-check
+# ## 7. Interaction regression (tier x condition), cross-check
 
 # %%
 order_summary, profit_summary = fit_interaction_models(experiment_log)

@@ -10,7 +10,7 @@
 
 **Don't launch broadly. Run one more experiment, then roll out narrowly.**
 
-All three originally proposed voucher strategies are flat-to-negative ROI once gross subsidy cost is counted against a hard NT$1,000,000 budget cap. The experiment as sized (200k users) cannot statistically confirm any of its own headline effects — 0/48 comparisons survive FDR correction, with a minimum detectable effect roughly **double** the largest observed lift. The one configuration that is robustly cost-efficient across every sensitivity scenario (`70-79%` usage-tier buyers, `$19-copay ×1` voucher) is worth a **properly-powered targeted pilot**, not a full launch.
+The voucher program as a whole does move orders — **+0.36 pp (95% CI [+0.03, +0.70]), a +4.8% relative lift, p = 0.03** (population-weighted, any voucher vs. control). But the launch decision needs more than that: all three originally proposed strategies are flat-to-negative ROI once gross subsidy cost is counted against a hard NT$1,000,000 budget cap, and the *design* questions — which configuration, for whom — are unconfirmable at this sample size (0/48 per-cell comparisons survive FDR correction, with a minimum detectable effect roughly **double** the largest observed lift). The one configuration that is robustly cost-efficient across every sensitivity scenario (`70-79%` usage-tier buyers, `$19-copay ×1` voucher) is worth a **properly-powered targeted pilot**, not a full launch.
 
 ![Tier x lever heatmap](outputs/figures/tier_lever_heatmap.png)
 
@@ -32,6 +32,24 @@ Buyers are segmented by historical free-shipping usage rate (what share of their
 
 ## 2. Product Metrics
 
+The metric tree below shows how the North Star decomposes into the levers the experiment manipulates — and the built-in tension: **copay pushes the primary and the secondary in opposite directions** (raising copay collects more revenue per order but suppresses ordering), which is exactly why this needs an experiment rather than a spreadsheet.
+
+```
+Net incremental profit per subsidy $        ← NORTH STAR
+│
+├── Δ Orders per user                        ← PRIMARY
+│     ↑ pushed up by generosity: copay↓, count↑, min-spend↓
+│
+├── × Profit per order                       ← SECONDARY
+│     ├── + copay collected from buyer       (↑ with copay — the tension)
+│     ├── + commission (450 AOV × 5%)
+│     └── − variable shipping cost (15)
+│     (GMV/user = orders × 450 AOV moves proportionally with the primary)
+│
+└── ÷ Gross voucher cost per user            ← GUARDRAIL (budget-binding)
+      = order rate × count × (45 − copay)
+```
+
 | Layer | Metric | Definition | Why it's here |
 |---|---|---|---|
 | **North Star** | Net incremental profit per subsidy dollar (ROI) | (Δprofit vs. control) / gross voucher cost | Ties every decision to the actual constraint — a capped subsidy pool, not unlimited spend |
@@ -44,6 +62,10 @@ Buyers are segmented by historical free-shipping usage rate (what share of their
 ---
 
 ## 3. Experiment Design
+
+**Eligibility.** Included: active buyer accounts with ≥1 order in the past 12 months (required to compute a historical usage rate). Excluded: newly registered accounts with no order history (can't be tiered — they belong in a separate new-user onboarding experiment), business/wholesale accounts, and accounts already enrolled in any concurrent voucher experiment (to prevent cross-treatment contamination).
+
+**Randomization unit: buyer account** — not session, not order. Vouchers are account-level assets; session-level assignment would let the same person land in multiple arms and self-contaminate. **Exposure = assignment**: the voucher is deposited directly into the account at randomization, so there is no trigger-dilution gap between assigned and treated.
 
 ```
                     9,000,000 buyer accounts
@@ -104,13 +126,17 @@ Before reading any result: did randomization deliver the designed 1/7 split with
 |---|---|
 | All 6 tiers, observed vs. designed 1/7 allocation | **Pass** — p-values range 0.19–0.81, no tier near the alarm threshold |
 
-Notebook 02 enforces this as a hard `assert` — the analysis refuses to proceed on a failed SRM, because a broken assignment mechanism invalidates every downstream number regardless of how significant it looks.
+Notebook 02 enforces this as a hard `assert` — the analysis refuses to proceed on a failed SRM, because a broken assignment mechanism invalidates every downstream number regardless of how significant it looks. Two further trust checks live in notebook 01: a **placebo test** (shuffled treatment labels collapse the apparent effect, ruling out leakage in the pipeline) and a **sampling-noise check** (repeated small-N draws jitter in line with the theoretical binomial SE — the data is realistically noisy, not suspiciously exact).
 
 ---
 
-## 6. Results: Average Effects
+## 6. Results: Primary Estimate & Average Effects
 
-Directionally, every lever behaves as the original case reported — vouchers lift orders most in high-usage tiers, higher min-spend protects margin, higher copay trades orders for profit — but **no comparison is individually confirmable at this sample size** (Section 4). Two findings survive that caveat because they don't depend on any single cell:
+**Primary readout (population-weighted, any voucher vs. control):**
+
+> Vouchers lift order rate by **+0.36 pp (95% CI [+0.03, +0.70])** — a **+4.8% relative lift** on a 7.6% control base, p = 0.032.
+
+The program-level effect is significant even at N=200k: pooling all six treatment arms and weighting across tiers concentrates enough power for the coarse question. The launch-relevant tension is that the *design* questions — which lever, for whom — fragment that same power across 48 cells, and **none survives FDR correction** (Section 4). So the honest state of the evidence is: **the program works; we cannot yet say which version for whom.** Two further findings survive because they don't depend on any single cell:
 
 - **The three originally proposed strategies are flat-to-negative under the budget cap.** Re-evaluated at the same NT$1,000,000 with gross subsidy cost counted: order-volume-max ≈ $4 incremental profit, profit-per-user-max ≈ −$26, the 60/40 blend ≈ −$8. These strategies optimized order volume or per-user profit in isolation — stating the objective function precisely (profit per budget dollar) changes the answer.
 - **A budget-ranked allocation beats all three** ($113 incremental profit, 12,025 users reached at full budget utilization) by funding the cost-efficient segment first rather than the highest-lift segment.
@@ -120,6 +146,8 @@ Directionally, every lever behaves as the original case reported — vouchers li
 ---
 
 ## 7. Heterogeneous Effects
+
+**Governance first.** The usage-rate tier is the **pre-registered** heterogeneity dimension — it comes from the original experiment's design, not from post-hoc slicing — and its per-cell results are BH-FDR corrected. Any cut *not* pre-specified (tenure, region, merchant category, device) is exploratory by rule: it can generate hypotheses for the next experiment but cannot support this launch decision. The cost of skipping this discipline is demonstrated inside the project itself: an RF uplift model confidently attributed 45% of effect variance to within-tier differences that the ground truth says do not exist (notebook 03) — exactly the kind of "discovered segment" an ungoverned HTE analysis would have shipped.
 
 Segment-level heterogeneity is the product story here — the average treatment effect is nearly meaningless when segments respond this differently:
 
