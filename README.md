@@ -273,8 +273,8 @@ python visualization.py               # all four figures
 
 ## About
 
-Built as a portfolio project demonstrating end-to-end Product Data Science judgment — from decision framing and metrics design through experiment trust checks, power analysis, heterogeneous-effect readout, and a launch recommendation under a real budget constraint.
+Built as a portfolio reconstruction of a real business problem for Product Data Scientist / Experimentation roles. Confidential company data are not published; the public dataset is calibrated simulation based on observed business conditions.
 
-**Methods**: Factorial A/B design · SRM trust checks · FDR-corrected significance testing · Power/MDE analysis · T-learner uplift modeling · Greedy fractional-knapsack budget optimization
-**Tools**: Python · pandas · scikit-learn · statsmodels · scipy
+**Methods**: DiD (two-way FE) · PSM · T/S/X-Learner · Causal Forest DML · Rosenbaum bounds
+**Tools**: Python · statsmodels · scikit-learn · matplotlib
 **Source case**: Reconstructed from a prior work project (voucher ROI segmentation, e-commerce logistics), itself explicitly disclaimed by its author as anonymized/synthesized for portfolio use.
